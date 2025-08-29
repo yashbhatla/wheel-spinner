@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Wheel from './components/Wheel';
+import InputForm from './components/InputForm';
 import './App.css';
 
+import Confetti from 'react-confetti';
+
 function App() {
+  const [options, setOptions] = useState(['Alice', 'Bob', 'Charlie', 'Dave']);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [winner, setWinner] = useState(null);
+
+  //Start Win
+  const handleSpin = () => {
+    setIsSpinning(true);
+    setWinner(null);
+    // Select a winner 
+    setTimeout(() => {
+      const winnerIndex = Math.floor(Math.random() * options.length);
+      setWinner(options[winnerIndex]);
+      setIsSpinning(false);
+    }, 5000);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {winner && <Confetti />}
+      <h1>🎯 Wheel Spinner</h1>
+      <div className="container">
+        <Wheel options={options} isSpinning={isSpinning} winner={winner} />
+        <InputForm options={options} setOptions={setOptions} handleSpin={handleSpin} isSpinning={isSpinning} />
+      </div>
+      {winner && !isSpinning && <h2>Winner is: {winner}!</h2>}
     </div>
   );
 }
